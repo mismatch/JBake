@@ -31,9 +31,21 @@ public class Main {
 	
 	private void run(LaunchOptions options) {
 		try {
+            if (null != options.getCommand()) {
+                options.getCommand().execute();
+                return;
+            }
+
+			checkIsSourceFolder(options.getSource());
+
+			processDestinationFolderArgument(options.getDestination());
+
 			Oven oven = new Oven(options.getSource(), options.getDestination());
 			oven.setupPaths();
 			oven.bake();
+		} catch (IllegalArgumentException iae) {
+			System.err.println(iae.getMessage());
+			System.exit(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -49,13 +61,6 @@ public class Main {
 			if (res.isHelpNeeded()) {
 				printUsage(parser);
 			}
-
-			checkIsSourceFolder(res.getSource());
-
-			processDestinationFolderArgument(res.getDestination());
-		} catch (IllegalArgumentException iae) {
-			System.err.println(iae.getMessage());
-			System.exit(0);
 		} catch (CmdLineException e) {
 			printUsage(parser);
 		}
@@ -65,7 +70,7 @@ public class Main {
 
 	private void processDestinationFolderArgument(File f) {
 		if (!f.exists()) {
-			f.mkdir();
+			f.mkdirs();
 		}
 
 		checkIsFolder(f);
