@@ -1,8 +1,12 @@
 package org.jbake.launcher;
 
+import java.io.File;
+
 public class InitCommand implements Command {
     public void execute() {
-        System.out.println("init command executed");
+        new File("assets").mkdir();
+        new File("content").mkdir();
+        new File("templates").mkdir();
     }
 }
 				
