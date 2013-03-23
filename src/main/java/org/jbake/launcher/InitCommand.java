@@ -1,12 +1,17 @@
 package org.jbake.launcher;
 
 import java.io.File;
+import java.io.IOException;
+
+import org.jbake.app.FileUtil;
 
 public class InitCommand implements Command {
     public void execute() {
-        new File("assets").mkdir();
-        new File("content").mkdir();
-        new File("templates").mkdir();
+        try {
+            FileUtil.copyJarResourcesRecursively(getClass().getResource("/sample"), new File("."));
+        } catch (IOException ioe) {
+            System.err.println("jbake cannot initialize current directory");
+        }
     }
 }
 				
